@@ -13,11 +13,6 @@ Vue + vuex + vue-router + better-scroll + Scss + ES6 开发一款音乐APP。
 # 项目结构
 
 
-
-# vue-music-webapp
-
-> a music webapp by vue 2.x
-
 ## Build Setup
 
 ```bash

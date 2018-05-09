@@ -1,6 +1,16 @@
 # 移动端音乐 WebApp
 
-Vue + vuex + vue-router + better-scroll + Scss + ES6 开发一款音乐APP
+Vue + vuex + vue-router + better-scroll + Scss + ES6 开发一款音乐APP。
+
+
+
+# 目的
+
+通过开发一个 Vue 全家桶项目，让自己更熟练的使用 Vue 全家桶、模块换开发、ES6 等知识，提高自己的能力。
+
+
+
+# 项目结构
 
 
 

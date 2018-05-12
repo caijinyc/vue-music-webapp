@@ -1,0 +1,253 @@
+<template>
+<transition name="slide">
+  <div class="music-list">
+    <div class="header" ref="header">
+      <div class="back" @click="back">
+        <i class="fa fa-angle-left"></i>
+      </div>
+      <div class="text">
+        <h1 class="title">{{headerTitle}}</h1>
+      </div>
+    </div>
+    <scroll class="list"
+    @scroll="scroll"
+    :probe-type="probeType"
+    :listen-scroll="listenScroll"
+    ref="list">
+      <div class="music-list-wrapper">
+        <div class="bg-image" :style="bgStyle" ref="bgImage">
+          <div class="filter"></div>
+          <div class="text">
+            <h2 class="list-title">
+              <!-- <p class="music">云音乐</p> -->
+              {{title}}
+            </h2>
+            <p class="update">{{updateTime}}</p>
+          </div>
+        </div>
+        <div class="song-list-wrapper">
+          <song-list @select="selectItem" :songs="listDetail"></song-list>
+        </div>
+      </div>
+    </scroll>
+  </div>
+</transition>
+</template>
+
+<script>
+import Scroll from 'base/scroll/scroll'
+import SongList from 'base/song-list/song-list'
+import {mapGetters, mapActions} from 'vuex'
+import {playlistMixin} from 'common/js/mixin'
+import {createSong} from 'common/js/song'
+
+const RESERVED_HEIGHT = 44
+
+export default {
+  mixins: [playlistMixin],
+  data () {
+    return {
+      listDetail: [],
+      scrollY: 0,
+      node: null,
+      headerTitle: '歌手'
+    }
+  },
+  created () {
+    if (!this.topList.id) {
+      this.$router.push('/rank')
+    }
+    this._normalizeSongs(this.topList.tracks)
+    this.probeType = 3
+    this.listenScroll = true
+  },
+  mounted () {
+    this.imageHeight = this.$refs.bgImage.clientHeight
+    this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT
+  },
+  computed: {
+    headerTitleTouchDown () {
+      return this.topList.name
+    },
+    bgStyle () {
+      return `background-image: url(${this.topList.coverImgUrl})`
+    },
+    title () {
+      return this.headerTitleTouchDown
+    },
+    updateTime () {
+      let time = new Date(this.topList.updateTime)
+      let month = time.getMonth() + 1
+      let day = time.getDate()
+      return `最近更新:${month}月${day}日`
+    },
+    ...mapGetters([
+      'topList'
+    ])
+  },
+  methods: {
+    handlePlaylist (playlist) {
+      const bottom = playlist.length > 0 ? '60px' : ''
+      this.$refs.list.$el.style.bottom = bottom
+      this.$refs.list.refresh()
+    },
+    _normalizeSongs (list) {
+      if (!this.topList.id) {
+        this.$router.push('/rank')
+        return
+      }
+      let ret = []
+      list.forEach((item) => {
+        ret.push(createSong(item))
+      })
+      this.listDetail = ret
+    },
+    selectItem (item, index) {
+      this.selectPlay({
+        list: this.listDetail,
+        index: index
+      })
+    },
+    scroll (pos) {
+      this.scrollY = pos.y
+    },
+    back () {
+      this.$router.back()
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
+  },
+  watch: {
+    scrollY (newY) {
+      // let translateY = Math.max(this.minTranslateY, newY)
+      const percent = Math.abs(newY / this.imageHeight)
+      if (newY < (this.minTranslateY + RESERVED_HEIGHT - 20)) {
+        this.headerTitle = this.headerTitleTouchDown
+      } else {
+        this.headerTitle = '歌手'
+      }
+      if (newY < 0) {
+        this.$refs.header.style.background = `rgba(212, 68, 57, ${percent})`
+      } else {
+        this.$refs.header.style.background = `rgba(212, 68, 57, 0)`
+      }
+      // console.log(this.minTranslateY + RESERVED_HEIGHT)
+      // if (translateY )
+      // console.log(translateY)
+    }
+  },
+  components: {
+    SongList,
+    Scroll
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import "~common/scss/variable";
+@import "~common/scss/mixin";
+.slide-enter-active, .slide-leave-active {
+  transition: all 0.2s
+}
+.slide-enter, .slide-leave-to {
+  transform: translate3d(100%, 0, 0)
+}
+
+.music-list {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: $color-background;
+  .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 44px;
+    color: #fff;
+    z-index: 100;
+    .back {
+      position: absolute;
+      top: 0;
+      left: 4px;
+      .fa-angle-left {
+        padding: 5px 10px;
+        font-size: 30px;
+      }
+    }
+    .text {
+      position: absolute;
+      left: 38px;
+      line-height: 44px;
+      font-size: $font-size-medium-x;
+      @include no-wrap()
+    }
+  }
+  .list {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background: $color-background;
+    .music-list-wrapper {
+      .bg-image {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-top: 70%;
+        transform-origin: top;
+        background-size: cover;
+        background-position: 0 30%;
+        .filter {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: black;
+          opacity: 0.2;
+        }
+        .text {
+          position: absolute;
+          width: 80%;
+          height: 40px;
+          bottom: 30px;
+          left: 20px;
+          color: #fff;
+          .list-title {
+            position: absolute;
+            bottom: 0;
+            font-style: italic;
+            font-size: $font-size-large;
+            line-height: 18px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            .music {
+              position: absolute;
+              top: -20px;
+              left: 5px;
+              font-style: italic;
+              font-weight: 600;
+              font-size: $font-size-medium;
+            }
+          }
+          .update {
+            position: absolute;
+            top: 45px;
+            left: 7px;
+            line-height: 14px;
+            font-size: $font-size-small;
+          }
+        }
+      }
+      .song-list-wrapper {
+        padding: 5px 0 20px 0;
+      }
+    }
+  }
+}
+
+</style>

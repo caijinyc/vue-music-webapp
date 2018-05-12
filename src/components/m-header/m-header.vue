@@ -1,6 +1,6 @@
 <template>
   <div class="m-header">
-    <h1 class="text">VMUSIC JIN</h1>
+    <h1 class="text">VMUSICJIN</h1>
   </div>
 </template>
 
@@ -23,6 +23,7 @@ export default {
     line-height: 44px;
     font-weight: 600;
     color: $color-text-l;
+    letter-spacing: 3px;
   }
 }
 </style>

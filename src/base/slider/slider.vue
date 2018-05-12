@@ -143,7 +143,7 @@ export default {
       &.active {
         // width: 10px;
         border-radius: 5px;
-        background: $color-theme-l;
+        background: $color-highlight-background;
       }
     }
   }

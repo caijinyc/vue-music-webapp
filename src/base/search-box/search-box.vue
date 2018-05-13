@@ -1,8 +1,8 @@
 <template>
   <div class="search-box">
-    <i class="icon-search"></i>
+    <!-- <i class="icon-search"></i> -->
     <input :placeholder="placeholder" v-model="query" type="text" class="box">
-    <i v-show="query" class="icon-dismiss" @click="clear"></i>
+    <i v-show="query" class="icon-delete" @click="clear"></i>
     <!-- <span class="search" >{{clickInfo}}</span> -->
   </div>
 </template>
@@ -43,33 +43,35 @@ export default {
   @import "~common/scss/variable";
 
 .search-box {
+  // position: relative;
   display: flex;
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  padding: 0 6px;
-  height: 40px;
-  background: #fff;
-  border-radius: 6px;
-  border: 1px solid rgb(235, 235, 235);
+  height: 25px;
+  border-bottom: 1px solid rgb(235, 235, 235);
   .icon-search {
     font-size: 24px;
     color: $color-text-g;
   }
   .box {
     flex: 1;
-    margin: 0 5px;
     line-height: 25px;
-    background: #fff;
-    color: $color-text;
+    background: $color-theme;
+    color: #fff;
     font-size: $font-size-medium;
+    border: none;
+    outline: medium;
     &::placeholder {
-      color: $color-text;
+      color: rgba(255, 255, 255, 0.6);
     }
   }
-  .icon-dismiss {
-    font-size: 16px;
-    color: $color-text-g;
+  .icon-delete {
+    position: absolute;
+    right: 12px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
   }
   .search {
     padding: 0 5px;

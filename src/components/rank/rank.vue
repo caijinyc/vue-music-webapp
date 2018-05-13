@@ -59,7 +59,7 @@ export default {
           let list = res.data.playlist
           list.top = res.data.playlist.tracks.slice(0, 3)
           this.yunTopList.push(list)
-          console.log(list)
+          // console.log(list)
         })
       }
     },
@@ -81,11 +81,12 @@ export default {
 .rank {
   position: fixed;
   width: 100%;
-  top: 93px;
+  top: 88px;
   bottom: 0;
   .toplist {
     height: 100%;
     overflow: hidden;
+      margin-top: 5px;
     .item {
       display: flex;
       margin: 0 10px;

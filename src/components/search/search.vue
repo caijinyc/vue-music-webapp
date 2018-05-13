@@ -1,39 +1,45 @@
 <template>
-  <div class="search" ref="searchWrapper">
-    <scroll class="search-scroll-wrapper" ref="scroll" :pullup="pullup" @scrollToEnd="searchMore">
-      <div ref="search">
-        <div class="search-box-wrapper">
-          <search-box @query="onQueryChange" ref="searchBox"></search-box>
-        </div>
-        <div class="search-hots" v-show="!query">
-          <span class="search-hots-item" v-for="item in hots" :key="item.id" @click="addQuery(item.first)">
-            {{item.first}}
-          </span>
-        </div>
-        <div class="shortcut-wrapper" v-show="!query">
-          <div class="search-history" v-show="searchHistory.length">
-            <h1 class="title">
-              <span class="text">搜索历史</span>
-              <span class="clear" >
-                <i class="icon-clear" ></i>
-              </span>
-            </h1>
-            <search-list @select=addQuery @delete="deleteSearchHistory" :searches="searchHistory"></search-list>
+  <transition name="search">
+    <div class="search" ref="searchWrapper">
+      <div class="search-box-wrapper">
+        <i class="fa fa-angle-left" @click="back"></i>
+        <search-box @query="onQueryChange" ref="searchBox"></search-box>
+      </div>
+      <scroll class="search-scroll-wrapper" ref="scroll" :pullup="pullup" @scrollToEnd="searchMore">
+        <div ref="search">
+          <div class="search-hots" v-show="!query">
+            <p class="title">热门搜索</p>
+            <span class="search-hots-item" v-for="item in hots" :key="item.id" @click="addQuery(item.first)">
+              {{item.first}}
+            </span>
+          </div>
+          <div class="shortcut-wrapper" v-show="!query">
+            <div class="search-history" v-show="searchHistory.length">
+              <h1 class="title">
+                <span class="text">搜索历史</span>
+                <span class="clear" @click="showConfirm">
+                  <i class="icon-clear" ></i>
+                </span>
+              </h1>
+              <search-list @select=addQuery @delete="deleteSearchHistory" :searches="searchHistory"></search-list>
+            </div>
+          </div>
+          <div class="search-result">
+            <suggest @select="saveSearch" @refresh="refresh" :query="query" ref="suggest"></suggest>
           </div>
         </div>
-        <div class="search-result">
-          <suggest @select="saveSearch" @refresh="refresh" :query="query" ref="suggest"></suggest>
-        </div>
-      </div>
-    </scroll>
-    <router-view></router-view>
-  </div>
+      </scroll>
+      <confirm ref="confirm" @confirm="clearSearchHistory" text="是否清空历史记录？" confirmBtnText="清空"></confirm>
+      <router-view></router-view>
+    </div>
+  </transition>
 </template>
 
 <script>
 import Scroll from 'base/scroll/scroll'
 import SearchBox from 'base/search-box/search-box'
 import Suggest from 'cpnts/suggest/suggest'
+import Confirm from 'base/confirm/confirm'
 import SearchList from 'base/search-list/search-list'
 import {searchMixin, playlistMixin} from 'common/js/mixin'
 import {getSearchHot} from 'api/search'
@@ -50,10 +56,16 @@ export default {
     this._getSearchHot()
   },
   methods: {
+    back () {
+      this.$router.back()
+    },
+    showConfirm () {
+      this.$refs.confirm.show()
+    },
     _getSearchHot () {
       getSearchHot().then((res) => {
         this.hots = res.data.result.hots
-        console.log(this.hots)
+        // console.log(this.hots)
       })
     },
     onQueryChange (query) {
@@ -83,7 +95,8 @@ export default {
     Scroll,
     SearchBox,
     Suggest,
-    SearchList
+    SearchList,
+    Confirm
   }
 }
 </script>
@@ -92,20 +105,44 @@ export default {
 @import "~common/scss/variable";
 @import "~common/scss/mixin";
 
+.search-enter-active, .search-leave-active {
+  transition: all 0.3s
+}
+.search-enter, .search-leave-to {
+  transform: translate3d(100%, 0, 0)
+}
 .search {
   position: fixed;
   z-index: 100;
   width: 100%;
-  top: 88px;
+  top: 0;
   bottom: 0;
+  background: $color-background;
+  .search-box-wrapper {
+    padding: 10px 40px 10px 43px;
+    // margin-bottom: 15px;
+    background: $color-theme;
+    .fa {
+      position: absolute;
+      left: 5px;
+      top: 3px;
+      padding: 3px 10px;
+      font-size: 30px;
+      color: #fff;
+    }
+  }
   .search-scroll-wrapper {
     height: 100%;
     overflow: hidden;
-    .search-box-wrapper {
-      margin: 10px 20px;
-    }
     .search-hots {
       margin: 0 20px;
+      .title {
+        padding: 15px 5px 0 5px;
+        height: 30px;
+        line-height: 30px;
+        font-size:$font-size-small-x;
+        color: $color-text-g;
+      }
       span {
         display: inline-block;
         padding: 3px 5px;
@@ -150,9 +187,9 @@ export default {
         .title {
           display: flex;
           align-items: center;
-          height: 40px;
-          font-size: $font-size-medium;
-          color: $color-text;
+          height: 30px;
+          font-size: $font-size-small-x;
+          color: $color-text-g;
           .text {
             // font-size: 13px;
             flex: 1;

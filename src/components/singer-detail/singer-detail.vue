@@ -23,6 +23,11 @@
           </div>
         </div>
         <div class="song-list-wrapper">
+          <div class="sequence-play" v-show="listDetail.length" @click="sequence">
+            <i class="iconfont icon-bofangicon"></i>
+            <span class="text">播放全部</span>
+            <span class="count">(共{{listDetail.length}}首)</span>
+          </div>
           <song-list @select="selectItem" :songs="listDetail"></song-list>
         </div>
       </div>
@@ -125,8 +130,15 @@ export default {
     back () {
       this.$router.back()
     },
+    sequence () {
+      let list = this.listDetail
+      this.sequencePlay({
+        list: list
+      })
+    },
     ...mapActions([
-      'selectPlay'
+      'selectPlay',
+      'sequencePlay'
     ])
   },
   watch: {
@@ -215,7 +227,7 @@ export default {
         position: relative;
         width: 100%;
         height: 0;
-        padding-top: 70%;
+        padding-top: 75%;
         transform-origin: top;
         background-size: cover;
         background-position: 0 30%;
@@ -232,7 +244,7 @@ export default {
           position: absolute;
           width: 80%;
           height: 40px;
-          bottom: 20px;
+          bottom: 40px;
           left: 20px;
           color: #fff;
           .list-title {
@@ -246,7 +258,34 @@ export default {
         }
       }
       .song-list-wrapper {
-        padding: 5px 0 20px 0;
+        padding: 41px 0 20px 0;
+        border-radius: 10px;
+        position: relative;
+        top:-20px;
+        background: $color-background;
+        .sequence-play {
+          position: absolute;
+          // left: 8;
+          top: 0px;
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 40px;
+          padding-left: 16px;
+          border-bottom: 1px solid rgb(228, 228, 228);
+          .iconfont {
+            font-size: 18px;
+            color: $color-text;
+            padding-right: 14px;
+          }
+          .text {
+            font-size: $font-size-medium-x;
+          }
+          .count {
+            font-size: $font-size-medium;
+            color: $color-text-g;
+          }
+        }
       }
     }
   }

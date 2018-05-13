@@ -5,7 +5,7 @@
         <div v-show="banner.length" class="decorate" v-if="banner.length"></div>
         <div v-if="banner.length" class="slider-wrapper">
           <slider>
-            <div v-for="item in banner" :key="item.id">
+            <div v-for="item in banner" :key="item.id" @click.stop="selectBanner(item)">
               <img :src="item.picUrl">
             </div>
           </slider>
@@ -22,14 +22,16 @@
                 <i class="fa fa-headphones"></i>
                 {{Math.floor(item.playCount / 10000) }}万
               </p>
-              <p class="text">{{item.name}}</p>
+              <div class="text">
+                <p class="name">{{item.name}}</p>
+              </div>
             </li>
           </ul>
         </div>
         <div class="recommend-song" ref="recommendSong">
           <h1 class="title">推荐歌曲</h1>
           <ul>
-            <li class="item" v-for="item in recommendMusic" :key="item.id">
+            <li class="item" v-for="item in recommendMusic" :key="item.id" @click="selectSong(item)">
               <div class="icon">
                 <img v-lazy="item.image">
               </div>
@@ -48,9 +50,10 @@
 import Scroll from 'base/scroll/scroll'
 import Slider from 'base/slider/slider'
 import {getBanner, getRecommendList, getRecommendMusic} from 'api/recommend'
+import {getSongDetail} from 'api/search'
 import {createRecommendSong} from 'common/js/song'
 import {ERR_OK} from 'common/js/config'
-import {mapMutations} from 'vuex'
+import {mapMutations, mapActions} from 'vuex'
 import {playlistMixin} from 'common/js/mixin'
 
 export default {
@@ -69,6 +72,30 @@ export default {
     // this.$refs.recommendList.style.
   },
   methods: {
+    selectBanner (item) {
+      let regHttp = /^http/
+      let regSong = /\/song\?id/
+      if (regHttp.test(item.url)) {
+        window.open(item.url)
+      }
+      if (regSong.test(item.url)) {
+        getSongDetail(item.targetId).then((res) => {
+          let m = res.data.songs[0]
+          let song = {
+            id: m.id,
+            singer: m.ar[0].name,
+            name: m.name,
+            image: m.al.picUrl,
+            album: m.al.name
+          }
+          this.insertSong(song)
+          this.setFullScreen(true)
+        })
+      }
+    },
+    selectSong (item) {
+      this.insertSong(item)
+    },
     handlePlaylist (playlist) {
       const bottom = playlist.length > 0 ? '60px' : ''
       this.$refs.recommend.style.bottom = bottom
@@ -78,6 +105,7 @@ export default {
       this.$router.push({
         path: `/recommend/${item.id}`
       })
+      // console.log(item)
       this.setMuiscList(item)
     },
     _getBanner () {
@@ -117,8 +145,12 @@ export default {
       })
     },
     ...mapMutations({
-      setMuiscList: 'SET_MUSIC_LIST'
-    })
+      setMuiscList: 'SET_MUSIC_LIST',
+      setFullScreen: 'SET_FULL_SCREEN'
+    }),
+    ...mapActions([
+      'insertSong'
+    ])
   },
   components: {
     Slider,
@@ -129,12 +161,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "~common/scss/variable";
+@import "~common/scss/mixin";
  .recommend {
   position: fixed;
   width: 100%;
   top: 88px;
   bottom: 0;
-    overflow: hidden;
+  z-index: 100;
+  overflow: hidden;
   .recommend-content {
     width: 100%;
     height: 100%;
@@ -203,14 +237,15 @@ export default {
           line-height: 16px;
           text-align: left;
           height: 40px;
+          line-height: 16px;
+          overflow: hidden;
           margin-bottom: 10px;
-            overflow: hidden;
-          // text-align-last: left;
           font-size: $font-size-small;
         }
       }
     }
     .recommend-song {
+      margin-top: -20px;
       box-sizing: border-box;
       width: 100%;
       text-align: center;

@@ -33,10 +33,10 @@
 </template>
 
 <script>
-import {getSearchSongs, getSearchSuggest, getSongDetail} from 'api/search'
-import {createSearchSong} from 'common/js/song'
 import Loading from 'base/loading/loading'
 import Singer from 'common/js/singer'
+import {getSearchSongs, getSearchSuggest, getSongDetail} from 'api/search'
+import {createSearchSong} from 'common/js/song'
 import {mapMutations, mapActions} from 'vuex'
 
 export default {

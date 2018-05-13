@@ -50,19 +50,19 @@
           </div>
           <div class="operators">
             <div class="icon i-left" @click="changeMode">
-              <i :class="iconMode"></i>
+              <i class="iconfont mode" :class="iconMode"></i>
             </div>
             <div class="icon i-left" @click="prev">
-              <i class="icon-prev"></i>
+              <i class="iconfont icon-prev"></i>
             </div>
             <div class="icon i-center" @click="togglePlaying">
-              <i :class="playIcon"></i>
+              <i class="iconfont" :class="playIcon"></i>
             </div>
             <div class="icon i-right" @click="next">
-              <i class="icon-next"></i>
+              <i class="iconfont icon-test"></i>
             </div>
-            <div class="icon i-right">
-              <i class="icon icon-not-favorite"></i>
+            <div class="icon i-right" @click="toggleFavorite(currentSong)">
+              <i class="iconfont" :class="getFavoriteIcon(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -83,12 +83,13 @@
             <i class="fa" :class="miniIcon"></i>
           </progress-circle>
         </div>
-        <div class="control">
-          <i class="icon-playlist"></i>
+        <div class="control" @click.stop="showPlaylist">
+          <i class="iconfont icon-caidan1"></i>
         </div>
       </div>
     </transition>
-    <audio ref="audio" @ended="end" @canplay="ready" @error="error" @timeupdate="updeTime"></audio>
+    <playlist @stopMusic="stopMusic" ref="playlist"></playlist>
+    <audio ref="audio" autoplay="autoplay" @ended="end" @canplay="ready" @error="error" @timeupdate="updeTime"></audio>
   </div>
 </template>
 
@@ -97,7 +98,8 @@ import ProgressCircle from 'base/progress-circle/progress-circle'
 import ProgressBar from 'base/progress-bar/progress-bar'
 import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll/scroll'
-import {mapGetters, mapMutations} from 'vuex'
+import Playlist from 'cpnts/playlist/playlist'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {getSong, getLyric} from 'api/song'
 import {playMode} from 'common/js/config'
 import {shuffle} from 'common/js/utl'
@@ -124,7 +126,7 @@ export default {
   computed: {
     iconMode () {
       if (this.mode === playMode.sequence) {
-        return 'icon-sequence'
+        return 'icon-next'
       } else if (this.mode === playMode.loop) {
         return 'icon-loop'
       } else {
@@ -138,7 +140,7 @@ export default {
       return this.playing ? 'fa-stop' : 'fa-play'
     },
     playIcon () {
-      return this.playing ? 'icon-pause' : 'icon-play'
+      return this.playing ? 'icon-stop' : 'icon-bofangicon'
     },
     upDatecurrentLyric () {
       if (this.noLyric) {
@@ -155,7 +157,8 @@ export default {
       'playing',
       'currentIndex',
       'mode',
-      'sequenceList'
+      'sequenceList',
+      'favoriteList'
     ])
   },
   watch: {
@@ -167,28 +170,45 @@ export default {
         return
       }
       this.$refs.audio.pause()
+      this.$refs.audio.currentTime = 0
       this._getSong(newVal.id)
     },
     url (newUrl) {
       this._getLyric(this.currentSong.id)
       this.$refs.audio.src = newUrl
-      this.$refs.audio.play()
+      let play = setInterval(() => {
+        if (this.songReady) {
+          // this.$refs.audio.autoplay()
+          clearInterval(play)
+        }
+        console.log('play')
+      }, 20)
       let stop = setInterval(() => {
         this.duration = this.$refs.audio.duration
         if (this.duration) {
           clearInterval(stop)
         }
       }, 150)
+      this.setPlayingState(true)
     },
-    playing (newPlaying) {
-      const audio = this.$refs.audio
-      newPlaying ? audio.play() : audio.pause()
-    },
+    // playing (newPlaying) {
+    //   const audio = this.$refs.audio
+    //   this.$nextTick(() => {
+    //     newPlaying ? audio.play() : audio.pause()
+    //   })
+    // },
     currentTime () {
       this.percent = this.currentTime / this.duration
     }
   },
   methods: {
+    stopMusic () {
+      // 删除最后一首的时候暂停音乐
+      console.log('删除最后一首的时候暂停音乐')
+    },
+    showPlaylist () {
+      this.$refs.playlist.show()
+    },
     changeMiddle () {
       if (this.currentShow === 'cd') {
         this.currentShow = 'lyric'
@@ -196,6 +216,25 @@ export default {
         this.currentShow = 'cd'
       }
       // console.log(this.currentShow)
+    },
+    getFavoriteIcon (song) {
+      if (this.isFavorite(song)) {
+        return 'icon-like'
+      }
+      return 'icon-dislike'
+    },
+    toggleFavorite (song) {
+      if (this.isFavorite(song)) {
+        this.deleteFavoriteList(song)
+      } else {
+        this.saveFavoriteList(song)
+      }
+    },
+    isFavorite (song) {
+      const index = this.favoriteList.findIndex((item) => {
+        return item.id === song.id
+      })
+      return index > -1
     },
     changeMode () {
       const mode = (this.mode + 1) % 3
@@ -257,19 +296,24 @@ export default {
     },
     ready () {
       this.songReady = true
+      this.savePlayHistory(this.currentSong)
     },
     next () {
       if (!this.songReady) {
         return
       }
-      this.songReady = false
-      let index = this.currentIndex + 1
-      if (index === this.playlist.length) {
-        index = 0
-      }
-      this.setCurrentIndex(index)
-      if (!this.playing) {
-        this.togglePlaying()
+      if (this.playlist.length === 1) {
+        this.loop()
+        return
+      } else {
+        let index = this.currentIndex + 1
+        if (index === this.playlist.length) {
+          index = 0
+        }
+        this.setCurrentIndex(index)
+        if (!this.playing) {
+          this.togglePlaying()
+        }
       }
       this.songReady = false
     },
@@ -296,7 +340,9 @@ export default {
       this.setFullScreen(true)
     },
     togglePlaying () {
+      const audio = this.$refs.audio
       this.setPlayingState(!this.playing)
+      this.playing ? audio.play() : audio.pause()
       if (this.currentLyric) {
         this.currentLyric.togglePlay()
       }
@@ -309,6 +355,7 @@ export default {
     _getLyric (id) {
       if (this.currentLyric) {
         this.currentLyric.stop()
+        this.$refs.lyricList.scrollTo(0, 0, 1000)
         this.currentLyric = null
       }
       this.noLyric = false
@@ -339,12 +386,18 @@ export default {
       setCurrentIndex: 'SET_CURRENT_INDEX',
       setPlayMode: 'SET_PLAY_MODE',
       setPlaylist: 'SET_PLAYLIST'
-    })
+    }),
+    ...mapActions([
+      'saveFavoriteList',
+      'deleteFavoriteList',
+      'savePlayHistory'
+    ])
   },
   components: {
     ProgressBar,
     ProgressCircle,
-    Scroll
+    Scroll,
+    Playlist
   }
 }
 </script>
@@ -409,17 +462,21 @@ export default {
       .title {
         width: 70%;
         margin: 0 auto;
-        line-height: 40px;
-        text-align: center;
-        @include no-wrap();
-        font-size: $font-size-large;
-        color: $color-text-l;
-      }
-      .subtitle {
+        padding-top: 10px;
         line-height: 20px;
         text-align: center;
         @include no-wrap();
-        font-size: $font-size-medium;
+        font-size: $font-size-large;
+        font-weight: 600;
+        color: $color-text-l;
+      }
+      .subtitle {
+        width: 70%;
+        margin: 0 auto;
+        line-height: 20px;
+        text-align: center;
+        @include no-wrap();
+        font-size: $font-size-small-x;
         color: $color-text-l;
       }
     }
@@ -550,6 +607,9 @@ export default {
           i {
             font-size: 30px;
           }
+          .mode {
+            font-size: 25px;
+          }
           &.i-left {
             text-align: right;
           }
@@ -563,7 +623,7 @@ export default {
           &.i-right {
             text-align: left;
           }
-          &.icon-favorite {
+          .icon-like {
             color: $color-sub-theme;
           }
         }
@@ -614,10 +674,10 @@ export default {
       flex-direction: column;
       justify-content: center;
       flex: 1;
-      line-height: 20px;
       overflow: hidden;
       .name {
        margin-bottom: 2px;
+       line-height: 14px;
        @include no-wrap();
        font-size: $font-size-medium;
        color: $color-text;
@@ -632,9 +692,14 @@ export default {
       flex: 0 0 30px;
       width: 30px;
       padding: 0 10px;
-      .icon-play-mini, .icon-pause-mini, .icon-playlist {
+      .icon-play-mini, .icon-pause-mini, .icon-playlist, .iconfont {
         font-size: 30px;
         color: $color-theme-d;
+      }
+      .iconfont {
+        position: relative;
+        left: -5px;
+        top: -3px;
       }
       .fa-play {
         color: $color-theme-d;

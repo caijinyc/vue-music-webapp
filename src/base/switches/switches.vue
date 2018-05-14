@@ -37,16 +37,18 @@ export default {
     align-items: center;
     width: 240px;
     margin: 0 auto;
-    border: 1px solid $color-sub-theme;
     // border-radius: 5px;
     .switch-item {
       flex: 1;
       padding: 8px;
+      margin: 0 20px;
       text-align: center;
       font-size: $font-size-medium;
       color: $color-text-l;
+      border-bottom: 2px solid $color-theme;
       &.active {
-        background: $color-highlight-background;
+        border-bottom: 2px solid $color-text-l;
+        // background: $color-highlight-background;
         color: #fff;
       }
     }

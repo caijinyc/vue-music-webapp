@@ -24,6 +24,9 @@
         </div>
       </scroll>
     </div>
+    <div class="no-result-wrapper" v-show="noResult">
+      <no-result :title="noResultDesc"></no-result>
+    </div>
   </div>
 </transition>
 </template>
@@ -31,7 +34,7 @@
 <script>
 import Switches from 'base/switches/switches'
 import {mapGetters, mapActions} from 'vuex'
-// import NoResult from 'base/no-result/no-result'
+import NoResult from 'base/no-result/no-result'
 import Scroll from 'base/scroll/scroll'
 import SongList from 'base/song-list/song-list'
 // import {playlistMixin} from 'common/js/mixin'
@@ -41,8 +44,8 @@ export default {
     return {
       currentIndex: 0,
       switches: [
-        {name: '我喜欢的'},
-        {name: '最近听的'}
+        {name: '我的收藏'},
+        {name: '最近播放'}
       ]
     }
   },
@@ -63,9 +66,9 @@ export default {
     },
     noResultDesc () {
       if (this.currentIndex === 0) {
-        return '暂无收藏歌曲'
+        return '去寻找属于你自己最爱的MUSIC吧~'
       } else {
-        return '你还没有听过歌曲'
+        return '你还没有听过歌呀~'
       }
     },
     ...mapGetters([
@@ -100,7 +103,8 @@ export default {
   components: {
     Switches,
     SongList,
-    Scroll
+    Scroll,
+    NoResult
   }
 }
 </script>
@@ -119,7 +123,8 @@ export default {
     transition: all 0.3s;
   }
   &.slide-enter, &.slide-leave-to {
-    transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-50%, 0, 0);
+    opacity: 0;
   }
   .back {
     position: absolute;
@@ -169,6 +174,9 @@ export default {
       // width: 100%;
       height: 100%;
     }
+  }
+  .no-result-wrapper {
+    margin-top: 60%;
   }
 }
 </style>

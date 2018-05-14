@@ -178,7 +178,8 @@ export default {
   transition: all 0.2s
 }
 .slide-enter, .slide-leave-to {
-  transform: translate3d(100%, 0, 0)
+  transform: translate3d(30%, 0, 0);
+  opacity: 0;
 }
 .loading-content {
   width: 100%;

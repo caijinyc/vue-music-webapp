@@ -37,7 +37,7 @@
 import Scroll from 'base/scroll/scroll'
 import {getData} from 'common/js/dom'
 
-const ANCHOR_HEIGHT = 22.7
+const ANCHOR_HEIGHT = 20
 // const TITLE_HEIGHT = 30
 
 export default {
@@ -159,19 +159,26 @@ export default {
   overflow: hidden;
   background: $color-background;
   .list-group {
-    padding-bottom: 30px;
+    // padding: 10px 0;
     .list-group-title {
       height: 20px;
       line-height: 20px;
-      padding-left: 20px;
+      padding-left: 12px;
+      margin-bottom: 10px;
       font-size: $font-size-small;
-      color: $color-text-l;
+      color: #fff;
       background:rgba(0, 0, 0, 0.1);
     }
     .list-group-item {
       display: flex;
       align-items: center;
-      padding: 20px 0 0 30px;
+      padding: 5px 0;
+      margin: 0 5px;
+      border-bottom: 1px solid rgb(228, 228, 228);
+      &:last-child {
+        border: none;
+        margin-bottom: 10px;
+      }
       .avatar {
         width: 50px;
         height: 50px;
@@ -196,7 +203,7 @@ export default {
     text-align: center;
     font-family:Helvetica;
     .item {
-      padding: 6px 5px;
+      padding: 5px 5px;
       line-height: 1;
       color: $color-text-g;
       font-size: $font-size-small;

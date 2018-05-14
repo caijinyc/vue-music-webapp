@@ -44,6 +44,13 @@ export default {
       this._initSlider()
       this._onScrollEnd()
     }, 20)
+
+    window.addEventListener('resize', () => {
+      if (!this.slider) {
+        return
+      }
+      this._setSliderWidth(true)
+    })
   },
   methods: {
     _setSliderWidth () {
@@ -61,13 +68,6 @@ export default {
         width += 2 * sliderWidth
       }
       this.$refs.sliderGroup.style.width = width + 'px'
-
-      window.addEventListener('resize', () => {
-        if (!this.slider) {
-          return
-        }
-        this._setSliderWidth(true)
-      })
     },
     _initSlider () {
       this.slider = new BScroll(this.$refs.slider, {
@@ -102,6 +102,9 @@ export default {
     _initDots () {
       this.dots = new Array(this.children.length)
     }
+  },
+  destroyed () {
+    clearTimeout(this.timer)
   }
 }
 </script>

@@ -1,11 +1,11 @@
 <template>
   <div class="player" v-show="playlist.length > 0">
-    <transition name="normal">
-      <div class="normal-player" v-show="fullScreen">
+    <transition name="normal" >
+      <div class="normal-player" v-show="fullScreen" @touchstart.once="firstPlay">
         <div class="background">
-          <transition name="filterR">
+          <!-- <transition name="filterR">
           <div class="filterR" v-show="currentShow === 'lyric'"></div>
-          </transition>
+          </transition> -->
           <div class="filter"></div>
           <img :src="currentSong.image" width="100%" height="100%">
         </div>
@@ -44,25 +44,25 @@
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <progress-bar :percent="percent" @percentChange="percentChange"></progress-bar>
+              <progress-bar :percent="percent" @percentChangeEnd="percentChangeEnd" @percentChange="percentChange"></progress-bar>
             </div>
             <span class="time time-r">{{format(duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon i-left" @click="changeMode">
-              <i class="iconfont mode" :class="iconMode"></i>
+            <div class="icon i-left" >
+              <i class="iconfont mode" :class="iconMode" @click="changeMode"></i>
             </div>
-            <div class="icon i-left" @click="prev">
-              <i class="iconfont icon-prev"></i>
+            <div class="icon i-left" >
+              <i class="iconfont icon-prev" @click="prev"></i>
             </div>
-            <div class="icon i-center" @click="togglePlaying">
-              <i class="iconfont" :class="playIcon"></i>
+            <div class="icon i-center" >
+              <i class="iconfont" @click="togglePlaying" :class="playIcon"></i>
             </div>
-            <div class="icon i-right" @click="next">
-              <i class="iconfont icon-test"></i>
+            <div class="icon i-right" >
+              <i class="iconfont icon-test" @click="next"></i>
             </div>
-            <div class="icon i-right" @click="toggleFavorite(currentSong)">
-              <i class="iconfont" :class="getFavoriteIcon(currentSong)"></i>
+            <div class="icon i-right">
+              <i class="iconfont"  @click="toggleFavorite(currentSong)" :class="getFavoriteIcon(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@
       </div>
     </transition>
     <playlist @stopMusic="stopMusic" ref="playlist"></playlist>
-    <audio ref="audio" autoplay="autoplay" @ended="end" @canplay="ready" @error="error" @timeupdate="updeTime"></audio>
+    <audio ref="audio" @ended="end" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
   </div>
 </template>
 
@@ -122,6 +122,7 @@ export default {
     }
   },
   created () {
+    this.move = false
   },
   computed: {
     iconMode () {
@@ -178,7 +179,7 @@ export default {
       this.$refs.audio.src = newUrl
       let play = setInterval(() => {
         if (this.songReady) {
-          // this.$refs.audio.autoplay()
+          this.$refs.audio.play()
           clearInterval(play)
         }
         console.log('play')
@@ -202,8 +203,13 @@ export default {
     }
   },
   methods: {
+    firstPlay () {
+      console.log('firstPlay')
+      this.$refs.audio.play()
+    },
     stopMusic () {
       // 删除最后一首的时候暂停音乐
+      this.$refs.audio.pause()
       console.log('删除最后一首的时候暂停音乐')
     },
     showPlaylist () {
@@ -255,6 +261,15 @@ export default {
       this.setCurrentIndex(index)
     },
     percentChange (percent) {
+      this.move = true
+      const currentTime = this.duration * percent
+      this.currentTime = currentTime
+      if (this.currentLyric) {
+        this.currentLyric.seek(currentTime * 1000)
+      }
+    },
+    percentChangeEnd (percent) {
+      this.move = false
       const currentTime = this.duration * percent
       this.$refs.audio.currentTime = currentTime
       if (!this.playing) {
@@ -265,7 +280,10 @@ export default {
         this.currentLyric.seek(currentTime * 1000)
       }
     },
-    updeTime (e) {
+    updateTime (e) {
+      if (this.move) {
+        return
+      }
       this.currentTime = e.target.currentTime
     },
     format (interval) {
@@ -311,6 +329,7 @@ export default {
           index = 0
         }
         this.setCurrentIndex(index)
+        // this.$refs.audio.play()
         if (!this.playing) {
           this.togglePlaying()
         }
@@ -428,7 +447,7 @@ export default {
         width: 100%;
         height: 100%;
         background: black;
-        opacity: 0.3;
+        opacity: 0.6;
       }
       .filterR {
         position: absolute;
@@ -437,10 +456,13 @@ export default {
         background: black;
         opacity: 0.4;
         &.filterR-enter-active, &.filterR-leave-active {
-          transition: opacity  0.5s
+          transition: all  0.3s
         }
         &.filterR-leave-to, &.filterR-enter {
           opacity: 0
+        }
+        &.filterR-leave {
+          opacity: 0.4;
         }
       }
     }
@@ -512,7 +534,7 @@ export default {
             width: 100%;
             height: 100%;
             box-sizing: border-box;
-            border: 10px solid rgba(255, 255, 255, 0.1);
+            border: 15px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             &.play {
               animation: rotate 20s linear infinite;

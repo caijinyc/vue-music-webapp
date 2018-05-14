@@ -1,7 +1,7 @@
 <template>
-  <div class="recommend" ref="recommend">
+  <div class="recommend" ref="recommend" >
     <scroll class="recommend-content" ref="scroll" :data="playList">
-      <div >
+      <div>
         <div v-show="banner.length" class="decorate" v-if="banner.length"></div>
         <div v-if="banner.length" class="slider-wrapper">
           <slider>
@@ -72,6 +72,10 @@ export default {
     // this.$refs.recommendList.style.
   },
   methods: {
+    // firstPlay () {
+    //   console.log('firstPlay')
+    //   this.$refs.audio.play()
+    // },
     selectBanner (item) {
       let regHttp = /^http/
       let regSong = /\/song\?id/
@@ -168,7 +172,6 @@ export default {
   top: 88px;
   bottom: 0;
   z-index: 100;
-  overflow: hidden;
   .recommend-content {
     width: 100%;
     height: 100%;
@@ -189,6 +192,7 @@ export default {
       overflow: hidden;
     }
     .recommend-list {
+      position: relative;
       box-sizing: border-box;
       width: 100%;
       text-align: center;
@@ -234,6 +238,7 @@ export default {
           color: $color-text-l
         }
         .text {
+          float: left;
           line-height: 16px;
           text-align: left;
           height: 40px;
@@ -279,18 +284,14 @@ export default {
           line-height: 16px;
           text-align: left;
           height: 16px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          @include no-wrap();
           font-size: $font-size-small;
         }
         .singer {
           line-height: 16px;
           margin-bottom: 10px;
           text-align: left;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          @include no-wrap();
           font-size: $font-size-small;
           color: $color-text-g;
         }

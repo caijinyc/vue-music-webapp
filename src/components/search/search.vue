@@ -58,6 +58,7 @@ export default {
   methods: {
     back () {
       this.$router.back()
+      this.$refs.searchBox.clear()
     },
     showConfirm () {
       this.$refs.confirm.show()
@@ -106,10 +107,11 @@ export default {
 @import "~common/scss/mixin";
 
 .search-enter-active, .search-leave-active {
-  transition: all 0.3s
+  transition: all 0.3s;
 }
 .search-enter, .search-leave-to {
-  transform: translate3d(100%, 0, 0)
+  transform: translate3d(50%, 0, 0);
+  opacity: 0;
 }
 .search {
   position: fixed;

@@ -17,6 +17,9 @@
       <!-- <div class="loading-container" v-show="!yunTopList.length">
         <loading></loading>
       </div> -->
+      <div v-show="showLoading" class="loading-content">
+        <loading></loading>
+      </div>
     </scroll>
     <router-view></router-view>
   </div>
@@ -25,6 +28,7 @@
 <script>
 import {getTop} from 'api/rank'
 import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
 // import Loading from 'base/loading/loading'
 import {playlistMixin} from 'common/js/mixin'
 import {mapMutations} from 'vuex'
@@ -35,7 +39,8 @@ export default {
   mixins: [playlistMixin],
   data () {
     return {
-      yunTopList: []
+      yunTopList: [],
+      showLoading: true
     }
   },
   created () {
@@ -61,6 +66,9 @@ export default {
           this.yunTopList.push(list)
           // console.log(list)
         })
+        if (i === YUNMUSIC_TOP.length - 1) {
+          this.showLoading = false
+        }
       }
     },
     ...mapMutations({
@@ -68,8 +76,8 @@ export default {
     })
   },
   components: {
-    Scroll
-    // Loading
+    Scroll,
+    Loading
   }
 }
 </script>
@@ -86,7 +94,7 @@ export default {
   .toplist {
     height: 100%;
     overflow: hidden;
-      margin-top: 5px;
+    padding-top: 5px;
     .item {
       display: flex;
       margin: 0 10px;
@@ -127,6 +135,12 @@ export default {
       top: 50%;
       transform: translateY(-50%);
     }
+  }
+  .loading-content {
+    position: fixed;
+    width: 100%;
+    top: 70%;
+    transform: translateY(-50%);
   }
 }
 </style>

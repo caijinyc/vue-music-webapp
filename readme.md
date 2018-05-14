@@ -10,13 +10,21 @@
 
 图片虽然压缩过了，但是几张加载一起还是有 3MB 左右，所以请耐心等待一下啦:joy:。感觉不错的可以去上面 :point_up:的地址体验一下呦~
 
-![](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/26017428.jpg)
+#### 推荐、排行榜、歌手
 
-![](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/29300725.jpg)
+![推荐、排行、歌手](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/26017428.jpg)
 
-![](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/46373308.jpg)
+#### 歌单详情、个人中心
 
-![](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/59909806.jpg)
+![详情页面](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/29300725.jpg)
+
+#### 播放器、播放列表
+
+![播放器](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/46373308.jpg)
+
+#### 搜索页面
+
+![搜索](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/59909806.jpg)
 
 
 

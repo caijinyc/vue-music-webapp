@@ -12,19 +12,19 @@
 
 #### 推荐、排行榜、歌手
 
-![推荐、排行、歌手](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/26017428.jpg)
+![推荐、排行、歌手](http://p87llnk7g.bkt.clouddn.com/18-5-15/21667995.jpg)
 
 #### 歌单详情、个人中心
 
-![详情页面](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/29300725.jpg)
+![详情页面](http://p87llnk7g.bkt.clouddn.com/18-5-15/4430556.jpg)
 
 #### 播放器、播放列表
 
-![播放器](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/46373308.jpg)
+![播放器](http://p87llnk7g.bkt.clouddn.com/18-5-15/81352770.jpg)
 
 #### 搜索页面
 
-![搜索](http://hexo-image.oss-cn-shenzhen.aliyuncs.com/18-5-14/59909806.jpg)
+![搜索](http://p87llnk7g.bkt.clouddn.com/18-5-15/77000462.jpg)
 
 
 

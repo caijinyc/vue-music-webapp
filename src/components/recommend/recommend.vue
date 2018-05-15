@@ -202,7 +202,7 @@ export default {
         padding-left: 1.5%;
         text-align: left;
         font-size: $font-size-medium;
-        font-weight: 600;
+        font-weight: bold;
         color: $color-text;
       }
       .item {
@@ -260,7 +260,7 @@ export default {
         padding-left: 1.5%;
         text-align: left;
         font-size: $font-size-medium;
-        font-weight: 600;
+        font-weight: bold;
         color: $color-text;
       }
       .item {

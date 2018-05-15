@@ -89,7 +89,7 @@
       </div>
     </transition>
     <playlist @stopMusic="stopMusic" ref="playlist"></playlist>
-    <audio ref="audio" @ended="end" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
+    <audio id="music-audio" ref="audio" @ended="end" autoplay @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
   </div>
 </template>
 
@@ -177,13 +177,13 @@ export default {
     url (newUrl) {
       this._getLyric(this.currentSong.id)
       this.$refs.audio.src = newUrl
-      let play = setInterval(() => {
-        if (this.songReady) {
-          this.$refs.audio.play()
-          clearInterval(play)
-        }
-        console.log('play')
-      }, 20)
+      // let play = setInterval(() => {
+      //   if (this.songReady) {
+      //     this.$refs.audio.play()
+      //     clearInterval(play)
+      //   }
+      //   console.log('play')
+      // }, 20)
       let stop = setInterval(() => {
         this.duration = this.$refs.audio.duration
         if (this.duration) {
@@ -192,12 +192,6 @@ export default {
       }, 150)
       this.setPlayingState(true)
     },
-    // playing (newPlaying) {
-    //   const audio = this.$refs.audio
-    //   this.$nextTick(() => {
-    //     newPlaying ? audio.play() : audio.pause()
-    //   })
-    // },
     currentTime () {
       this.percent = this.currentTime / this.duration
     }
@@ -374,7 +368,6 @@ export default {
     _getLyric (id) {
       if (this.currentLyric) {
         this.currentLyric.stop()
-        this.$refs.lyricList.scrollTo(0, 0, 1000)
         this.currentLyric = null
       }
       this.noLyric = false
@@ -382,6 +375,8 @@ export default {
         this.currentLyric = new Lyric(res.data.lrc.lyric, this.handleLyric)
         if (this.playing) {
           this.currentLyric.play()
+          // 歌词重载以后 高亮行设置为 0
+          this.currentLineNum = 0
           this.$refs.lyricList.scrollTo(0, 0, 1000)
         }
       }).catch(() => {

@@ -42,7 +42,7 @@ export default {
     }
     &.router-link-active {
       span {
-        font-weight: 600;
+        font-weight: bold;
         color: $color-text-l;
         border-bottom: 2px solid $color-text-l
       }

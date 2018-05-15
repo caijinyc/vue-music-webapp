@@ -253,7 +253,7 @@ export default {
             bottom: 0;
             font-size: $font-size-large-s;
             line-height: 18px;
-            font-weight: 600;
+            font-weight: bold;
             letter-spacing: 1px;
           }
         }

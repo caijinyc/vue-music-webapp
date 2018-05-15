@@ -27,7 +27,7 @@ export default {
   background: $color-theme;
   .text {
     line-height: 44px;
-    font-weight: 600;
+    font-weight: bold;
     color: $color-text-l;
     letter-spacing: 3px;
   }

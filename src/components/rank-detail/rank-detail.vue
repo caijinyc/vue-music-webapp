@@ -241,14 +241,14 @@ export default {
             font-style: italic;
             font-size: $font-size-large;
             line-height: 18px;
-            font-weight: 600;
+            font-weight: bold;
             letter-spacing: 1px;
             .music {
               position: absolute;
               top: -20px;
               left: 5px;
               font-style: italic;
-              font-weight: 600;
+              font-weight: bold;
               font-size: $font-size-medium;
             }
           }

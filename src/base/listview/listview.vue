@@ -207,7 +207,7 @@ export default {
       line-height: 1;
       color: $color-text-g;
       font-size: $font-size-small;
-      font-weight: 600;
+      font-weight: bold;
       &.current {
         color: $color-theme;
       }

@@ -484,7 +484,7 @@ export default {
         text-align: center;
         @include no-wrap();
         font-size: $font-size-large;
-        font-weight: 600;
+        font-weight: bold;
         color: $color-text-l;
       }
       .subtitle {

@@ -6,7 +6,7 @@
 
 ![](http://p87llnk7g.bkt.clouddn.com/18-5-15/34474412.jpg)
 
-- 电脑在 Chrome 调试模式下食用效果更佳，开启调试模式的手机模式后，如果不能滚动，刷新一下页面即可
+- 推荐使用手机预览，电脑在 Chrome 调试模式下食用效果更佳，开启调试模式的手机模式后，如果不能滚动，刷新一下页面即可
 
 :satisfied: 源码地址：[vue-music-webapp](https://github.com/CaiJinyc/vue-music-webapp)，欢迎 star 和 fork 哦~
 

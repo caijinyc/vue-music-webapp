@@ -1,10 +1,16 @@
-# 移动端音乐 WebApp
+# Vue 网易云音乐 WebApp
 
-基于 Vue(2.5) + vuex + vue-router + vue-axios +better-scroll + Scss + ES6 等开发一款移动端音乐 WebApp，UI 界面参考了安卓版的网易云音乐。
+:musical_keyboard: 基于 Vue(2.5) + vuex + vue-router + vue-axios +better-scroll + Scss + ES6 等开发一款移动端音乐 WebApp，UI 界面参考了安卓版的网易云音乐、flex 布局适配常见移动端。
 
-:yum:项目演示地址：[移动端音乐 WebApp](http://120.79.162.149:3002)，如果你觉得我做的不错的话，我就厚着脸皮求个 **star** :star: 哈，**star** 是对我最大的鼓励呦（脸红脸红）。
+:yum: 项目演示地址：[移动端音乐 WebApp](http://120.79.162.149:3002)，或者可以扫描二维码访问：
 
-:satisfied:源码地址：[vue-music-webapp](https://github.com/CaiJinyc/vue-music-webapp)，欢迎 star 和 fork 哦~
+![](http://p87llnk7g.bkt.clouddn.com/18-5-15/34474412.jpg)
+
+- 电脑在 Chrome 调试模式下食用效果更佳，开启调试模式的手机模式后，如果不能滚动，刷新一下页面即可
+
+:satisfied: 源码地址：[vue-music-webapp](https://github.com/CaiJinyc/vue-music-webapp)，欢迎 star 和 fork 哦~
+
+>  如果你觉得我做的不错的话，我就厚着脸皮求个 **star** ⭐️ 哈，**star** 是对我最大的鼓励（老脸一红）
 
 ## 预览
 
@@ -30,7 +36,7 @@
 
 ## 开发目的
 
-通过学习开发一个 Vue 全家桶项目，让自己更熟练的使用 Vue 全家桶、模块换开发、ES6 等知识，提高自己的技术能力。
+通过学习开发一个 Vue 全家桶项目，让自己更熟练的使用 Vue 全家桶、模块化开发、ES6 等等知识，提高自己的技术能力。
 
 ## 技术栈
 
@@ -40,27 +46,22 @@
 * `vue-router`：为单页面应用提供的路由系统，使用了 `Lazy Loading Routes` 技术来实现异步加载优化性能
 * `vuex`：Vue 集中状态管理，在多个组件共享某些状态时非常便捷
 * `vue-lazyload`：实现图片懒加载，节省用户流量，优化页面加载速度
-* `better-scroll`：iscroll 的优化版，使移动端滑动体验更加流畅
+* `better-scroll`：解决移动端各种滚动场景需求的插件，使移动端滑动体验更加流畅
 * `SCSS`：css 预编译处理器
 * `ES6`：ECMAScript 新一代语法，模块化、解构赋值、Promise、Class 等方法非常好用
-* `fastclick` ：消除 click 移动游览器 300ms 的延迟
-* ​
 
 **后端**
 
 * `Node.js`：利用 Express 搭建的本地测试服务器
 * `vue-axios`：用来请求后端 API 音乐数据
-* `NeteaseCloudMusicApi`：网易云音乐 NodeJS 版 API
+* `NeteaseCloudMusicApi`：网易云音乐 NodeJS 版 API，提供音乐数据
 
 **其他工具**
 
 * `vue-cli`：Vue 脚手架工具，快速初始化项目代码
 * `eslint`：代码风格检查工具，帮助我们规范代码书写（一定要养成良好的代码规范）
 * `iconfont` ：阿里巴巴图标库，谁用谁知道
-
-## TODO
-
-
+* `fastclick` ：消除 click 移动游览器 300ms 的延
 
 ## 实现功能
 
@@ -70,7 +71,7 @@
 
 推荐页分成三个部分，分别是 banner 轮播图、推荐歌单、推荐歌曲，数据都是使用 `axios` 请求 API 获取得到的，图片都使用 `vue-lazyload` 实现懒加载。
 
-轮播图：使用 `better-scroll` 实现，具体可以看这里 [Slide](https://ustbhuangyi.github.io/better-scroll/doc/zh-hans/options-advanced.html#snap) 。
+轮播图：使用 `better-scroll` 实现，具体可以看这里 [Slide](https://ustbhuangyi.github.io/better-scroll/doc/zh-hans/options-advanced.html#```snap```) 。*点击跳转方面只实现歌曲和歌单的跳转，因为暂时只实现了这两个功能。*
 
 推荐歌单，推荐歌曲：使用 `vuex` 管理数据，方便组件之间的数据交互（播放器播放歌曲）。因为数据上还有播放数量，所以就顺便也加上去了。
 
@@ -112,13 +113,17 @@
 
 通过 `localstorage` 存储喜欢歌曲、播放历史数据。
 
+#### audio 标签在移动端不能够自动播放的问题
+
+电脑端是没有这个问题的，这个问题真的是让我很头大，最后是用了很鬼畜的方法解决了（使用 `addEventListener` 监听 touchend 事件，然后在回调函数中让 audio 播放一次，具体看 App.vue 文件，注释有写）。
+
 ### 播放列表
 
-显示当前播放歌曲，可以用来删除列表中的歌曲、以及选择播放歌曲。
+显示和管理当前播放歌曲，可以用来删除列表中的歌曲、以及选择播放歌曲。
 
 ### 搜索功能
 
-实现功能：搜索歌手、歌单、歌曲、数据节流、上拉刷新、保存搜索记录。
+实现功能：搜索歌手、歌单、歌曲、热门搜索、数据节流、上拉刷新、保存搜索记录。
 
 通过关键字请求 API 获取搜索数据，显示歌手、歌单、歌曲。
 
@@ -128,17 +133,24 @@
 
 ### 用户中心
 
-将在本地存储的数据显示出来，方便用户使用，后期可以添加更多功能。
+将在本地存储的数据显示出来，方便用户使用，后期准备添加更多功能。
 
-### 其他
+## TODO
 
-此应用的全部数据来自 QQ音乐，推荐页的歌单列表及歌词是利用 `axios` 结合 `node.js` 代理后端请求抓取的。
+1. 优化排行榜加载速度
+2. 优化重复代码
+3. 增加歌曲评论
+4. 增加 MV、电台 功能
+5. emm，更多功能容我再想想哈
 
-全局通用的应用级状态使用 `vuex` 集中管理
+## 感谢
 
-全局引入 `fastclick` 库，消除 click 移动浏览器300ms延迟
+- 感谢 [Binaryify](https://github.com/Binaryify) 对接口文档 [NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi) 的不断维护与更新。
+- 感谢 [ustbhuangyi](https://github.com/ustbhuangyi) 老师的 [Vue 实战教程](http://coding.imooc.com/class/107.html) ，让我学习到很多 vue 的知识。
 
-页面是响应式的，适配常见的移动端屏幕，采用 `flex` 布局
+## 最后
+
+最后的最后当然是厚着脸皮的再求个 star 啦，如果觉得我的项目还不错的话 :clap:，就给个 star :star: 鼓励一下吧~
 
 ## Build Setup
 
@@ -151,9 +163,5 @@ npm run dev
 
 # build for production with minification
 npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

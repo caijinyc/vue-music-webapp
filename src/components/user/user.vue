@@ -88,7 +88,7 @@ export default {
     },
     sequence () {
       let list = this.currentIndex === 0 ? this.favoriteList : this.playHistory
-      if (list.nength === 0) {
+      if (list.length === 0) {
         return
       }
       this.sequencePlay({

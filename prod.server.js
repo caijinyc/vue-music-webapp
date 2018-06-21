@@ -1,5 +1,5 @@
 var express = require('express')
-var config = require('./config/index')
+// var config = require('./config/index')
 var app = express()
 app.use(express.static('./dist'))
 

@@ -4,7 +4,7 @@
 
 :yum: 项目演示地址：[移动端音乐 WebApp](http://120.79.162.149:3002)，或者可以扫描二维码访问：
 
-![](http://p87llnk7g.bkt.clouddn.com/18-5-15/34474412.jpg)
+![](./doc/img/qr.png)
 
 - 推荐使用手机预览，电脑在 Chrome 调试模式下食用效果更佳，开启调试模式的手机模式后，如果不能滚动，刷新一下页面即可
 
@@ -14,19 +14,19 @@
 
 #### 推荐、排行榜、歌手
 
-![推荐、排行、歌手](http://p87llnk7g.bkt.clouddn.com/18-5-15/21667995.jpg)
+![推荐、排行、歌手](./doc/img/1.png)
 
 #### 歌单详情、个人中心
 
-![详情页面](http://p87llnk7g.bkt.clouddn.com/18-5-15/4430556.jpg)
+![详情页面](./doc/img/2.png)
 
 #### 播放器、播放列表
 
-![播放器](http://p87llnk7g.bkt.clouddn.com/18-5-15/81352770.jpg)
+![播放器](./doc/img/3.png)
 
 #### 搜索页面
 
-![搜索](http://p87llnk7g.bkt.clouddn.com/18-5-15/77000462.jpg)
+![搜索](./doc/img/4.png)
 
 
 

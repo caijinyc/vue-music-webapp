@@ -120,6 +120,7 @@ export default {
           // })
           let list = res.data.banners
           this.banner = list.splice(4)
+          // console.log(this.banner)
         } else {
           console.error('Banner 获取失败')
         }

@@ -6,7 +6,7 @@
         <div v-if="banner.length" class="slider-wrapper">
           <slider>
             <div v-for="item in banner" :key="item.id" @click.stop="selectBanner(item)">
-              <img :src="item.picUrl">
+              <img :src="item.imageUrl">
             </div>
           </slider>
         </div>
@@ -120,7 +120,6 @@ export default {
           // })
           let list = res.data.banners
           this.banner = list.splice(4)
-          // console.log(this.banner)
         } else {
           console.error('Banner 获取失败')
         }
@@ -176,13 +175,17 @@ export default {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition-duration: 0ms;
+    transform: translate(0px, 0px) translateZ(0px);
     .decorate {
       position: absolute;
       top: -30vh;
       z-index: -10;
       background: $color-theme;
       width: 100%;
-      height: 50vh;
+      height: 46vh;
       vertical-align: inherit;
     }
     .slider-wrapper {
